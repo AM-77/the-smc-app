@@ -12,7 +12,11 @@ export default function Toast({ type = 'error', message, onDismiss }) {
         onDismiss={onDismiss}
         style={{
           backgroundColor:
-            type === 'error' ? theme.colors.error : theme.colors.success,
+            type === 'error'
+              ? theme.colors.error
+              : type === 'success'
+              ? theme.colors.success
+              : '#00000000',
         }}
       >
         <Text style={styles.content}>{message}</Text>
