@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, Keyboard } from 'react-native';
 import { theme } from '../core/theme';
 import Background from '../components/Background';
 import BackButton from '../components/BackButton';
@@ -34,6 +34,7 @@ export default function CreateMemberScreen({ navigation }) {
   const [error, setError] = useState();
 
   const onSaveMember = async () => {
+    Keyboard.dismiss();
     const fullNameError = nameValidator(fullname.value);
     const emailError = emailValidator(email.value);
     const phoneError = phoneValidator(phone.value);
@@ -85,13 +86,27 @@ export default function CreateMemberScreen({ navigation }) {
         type: 'success',
         message: 'A new memeber has been created.',
       });
+
+      setPpic(null);
+      setFullName({ value: '', error: '' });
+      setEmail({ value: '', error: '' });
+      setPhone({ value: '', error: '' });
+      setCommittee({ value: '', error: '' });
+      setBdate({ value: '', error: '' });
+      setEdate({ value: '', error: '' });
+      setSerialnumber({ value: '', error: '' });
     }
     setLoading(false);
   };
 
+  const goBack = () => {
+    Keyboard.dismiss();
+    navigation.goBack();
+  };
+
   return (
     <Background pdg={0}>
-      <BackButton goBack={navigation.goBack} />
+      <BackButton goBack={goBack} />
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Create A Member</Text>

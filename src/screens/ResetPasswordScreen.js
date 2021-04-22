@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Keyboard } from 'react-native';
 import Background from '../components/Background';
 import BackButton from '../components/BackButton';
 import Logo from '../components/Logo';
@@ -15,6 +16,8 @@ export default function ResetPasswordScreen({ navigation }) {
   const [toast, setToast] = useState({ value: '', type: '' });
 
   const sendResetPasswordEmail = async () => {
+    Keyboard.dismiss();
+
     const emailError = emailValidator(email.value);
     if (emailError) {
       setEmail({ ...email, error: emailError });

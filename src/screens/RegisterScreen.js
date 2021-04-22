@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
 import { Text } from 'react-native-paper';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
@@ -20,6 +20,7 @@ export default function RegisterScreen({ navigation }) {
   const [error, setError] = useState();
 
   const onSignUpPressed = async () => {
+    Keyboard.dismiss();
     const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);

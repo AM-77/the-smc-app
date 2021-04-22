@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, Keyboard } from 'react-native';
 import { theme } from '../core/theme';
 import Button from '../components/Button';
 import Background from '../components/Background';
@@ -44,6 +44,7 @@ export default function EditMemberScreen({ route, navigation }) {
   const [toast, setToast] = useState({ value: '', type: '' });
 
   const onUpdateMember = async () => {
+    Keyboard.dismiss();
     const fullNameError = nameValidator(fullname.value);
     const emailError = emailValidator(email.value);
     const phoneError = phoneValidator(phone.value);
