@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   ScrollView,
@@ -8,11 +8,12 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import { theme } from '../core/theme';
 import Toast from '../components/Toast';
-import { deleteMember } from '../api/members-api';
+import { deleteMember, getAllMembers } from '../api/members-api';
 
 export default function MembersList({ members, displayMember, editMember }) {
   const [deleting, setDeleting] = useState(false);
@@ -57,9 +58,31 @@ export default function MembersList({ members, displayMember, editMember }) {
       ]
     );
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getAllMembers()
+      .then((mbrs) => {
+        setRefreshing(false);
+        setMembersList(mbrs);
+      })
+      .catch((err) => {
+        setRefreshing(false);
+        if (err.message) {
+          setToast({ value: error.message, type: 'error' });
+        }
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {membersList &&
           membersList.map((member) => (
             <TouchableRipple
