@@ -7,7 +7,6 @@ import 'firebase/auth';
 
 export default function AuthLoadingScreen({ navigation }) {
   app.auth().onAuthStateChanged((user) => {
-    console.log(user);
     if (user) {
       navigation.reset({
         index: 0,
