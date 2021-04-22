@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -10,14 +10,26 @@ import { IconButton } from 'react-native-paper';
 import { theme } from '../core/theme';
 import Background from '../components/Background';
 import MembersList from '../components/MembersList';
+import Toast from '../components/Toast';
 import { getAllMembers } from '../api/members-api';
 
 export default function DashboardScreen({ navigation }) {
   const [members, setMembers] = useState(null);
+  const [toast, setToast] = useState({ value: '', type: '' });
 
-  getAllMembers()
-    .then((members) => setMembers(members))
-    .catch((err) => console.log(err));
+  useEffect(() => {
+    laodMembers();
+  }, []);
+
+  const laodMembers = () => {
+    getAllMembers()
+      .then((members) => setMembers(members))
+      .catch((err) => {
+        if (err.message) {
+          setToast({ value: error.message, type: 'error' });
+        }
+      });
+  };
 
   const createMember = () => navigation.navigate('CreateMemberScreen');
 
@@ -47,6 +59,8 @@ export default function DashboardScreen({ navigation }) {
           <View style={styles.indecatorWrap}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>
+        ) : members.length === 0 ? (
+          <Text style={styles.noMember}>No member was added yet.</Text>
         ) : (
           <MembersList
             members={members}
@@ -55,6 +69,7 @@ export default function DashboardScreen({ navigation }) {
           />
         )}
       </View>
+      <Toast {...toast} onDismiss={() => setToast({ value: '', type: '' })} />
     </ImageBackground>
   );
 }
@@ -70,7 +85,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   row: {
     width: '100%',
@@ -94,5 +108,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  noMember: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme.colors.secondary,
+    marginTop: 50,
   },
 });
